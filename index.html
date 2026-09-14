@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدرسة عثمان بن عفان للبنين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background: #f8fafc; direction: rtl; color: #0f172a; }
+
+        header {
+            background: #ffffff;
+            padding: 14px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .header-title h2 { font-size: 1.05rem; color: #3b7b8a; font-weight: 700; }
+        .header-title h1 { font-size: 1.4rem; color: #0f172a; font-weight: 800; }
+        .header-logos { display: flex; align-items: center; gap: 20px; }
+        .logo-img { height: 55px; max-width: 120px; object-fit: contain; }
+
+        nav {
+            background: linear-gradient(135deg, #1e3a8a, #2c5e6b);
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .nav-list { display: flex; list-style: none; gap: 15px; }
+        .nav-list li a {
+            display: block;
+            padding: 16px 22px;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        .nav-list li a.active, .nav-list li a:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-bottom-color: #facc15;
+        }
+
+        .admin-toggle-btn {
+            background: linear-gradient(135deg, #facc15, #eab308);
+            color: #0f172a;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 25px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(250, 204, 21, 0.3);
+        }
+        .admin-toggle-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(250, 204, 21, 0.4); }
+        .admin-active-badge {
+            background: #10b981;
+            color: white;
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            display: none;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+            cursor: pointer;
+        }
+
+        .main-container { min-height: calc(100vh - 160px); background-color: #f8fafc; position: relative; }
+        .tab-content { display: none; width: 100%; min-height: calc(100vh - 160px); }
+        .tab-content.active { display: flex; }
+        .split-tab { align-items: center; justify-content: space-between; overflow: hidden; width: 100%; }
+
+        .right-section {
+            flex: 1.35;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 30px;
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+        }
+        .left-section {
+            flex: 1;
+            height: 560px;
+            position: relative;
+            overflow: hidden;
+            clip-path: ellipse(100% 120% at 0% 50%);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.08);
+        }
+        .left-section img { width: 100%; height: 100%; object-fit: cover; }
+
+        .axis-banner-hero {
+            background: linear-gradient(135deg, #2c5e6b, #1e3a8a);
+            color: #ffffff;
+            font-size: 1.35rem;
+            font-weight: 800;
+            padding: 12px 45px;
+            border-radius: 50px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(44, 94, 107, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .axis-badge-yellow { background: linear-gradient(135deg, #facc15, #eab308); color: #0f172a; font-size: 1.4rem; font-weight: 800; padding: 12px 45px; border-radius: 50px; text-align: center; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3); }
+
+        .modern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 860px;
+            padding: 5px;
+        }
+
+        .modern-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .modern-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #3b7b8a, #1e3a8a);
+            border-radius: 0 20px 20px 0;
+        }
+        .modern-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 35px rgba(15, 23, 42, 0.09);
+            border-color: #cbd5e1;
+        }
+
+        .card-top-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card-icon-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #f0f9ff;
+            color: #0284c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.2);
+        }
+        .indicator-chip {
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .card-title-text {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-top: 4px;
+        }
+
+        .card-actions-wrapper {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+
+        .btn-modern-action {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 8px 4px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: #334155;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .btn-modern-action.btn-text-action:hover {
+            background: #1e3a8a;
+            color: #ffffff;
+            border-color: #1e3a8a;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+        }
+        .btn-modern-action.btn-file-action:hover {
+            background: #0d9488;
+            color: #ffffff;
+            border-color: #0d9488;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+        }
+        .btn-modern-action.btn-guide-action:hover {
+            background: #0284c7;
+            color: #ffffff;
+            border-color: #0284c7;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+        }
+
+        .axis-buttons-group { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 420px; }
+        .axis-btn {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .axis-btn:hover { transform: translateX(-6px); border-color: #3b7b8a; background: #f8fafc; box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+        .axis-btn-text { font-size: 1.25rem; font-weight: 800; color: #1e293b; }
+
+        .welcome-card { background: linear-gradient(135deg, #ffffff, #fefce8); border: 2px solid #fef08a; border-radius: 24px; padding: 30px 25px; text-align: center; max-width: 500px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .welcome-card h2 { color: #1e293b; font-size: 1.45rem; font-weight: 800; line-height: 1.6; }
+
+        .report-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 22px 28px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+            border-top: 5px solid #3b7b8a;
+            text-align: center;
+        }
+        .report-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .report-card-header h3 { font-size: 1.25rem; color: #1b365d; font-weight: 800; }
+
+        .x-follow-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 20px 24px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+            text-align: center;
+        }
+        .x-follow-card h3 { color: #1a202c; font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+        .x-follow-card p { color: #4a5568; font-size: 0.9rem; font-weight: 600; margin-bottom: 16px; }
+        .x-follow-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #000000;
+            color: #ffffff;
+            padding: 10px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .x-follow-btn:hover { background-color: #333333; transform: translateY(-2px); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .modal-card { background: #ffffff; border-radius: 24px; width: 100%; max-width: 650px; box-shadow: 0 25px 50px rgba(0,0,0,0.25); overflow: hidden; }
+        .modal-header { background: linear-gradient(135deg, #2c5e6b, #1e3a8a); color: #ffffff; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { font-size: 1.2rem; font-weight: 800; }
+        .modal-close-btn { background: transparent; border: none; color: #ffffff; font-size: 1.6rem; cursor: pointer; }
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; max-height: 70vh; overflow-y: auto; }
+        .modal-textarea { width: 100%; height: 260px; padding: 16px; border: 2px solid #cbd5e1; border-radius: 14px; font-size: 0.95rem; line-height: 1.6; outline: none; resize: vertical; }
+
+        .file-upload-box { border: 2px dashed #cbd5e1; border-radius: 14px; padding: 24px; text-align: center; background: #f8fafc; cursor: pointer; display: none; }
+        .file-list { display: flex; flex-direction: column; gap: 10px; }
+        .file-item { display: flex; align-items: center; justify-content: space-between; background: #f1f5f9; padding: 12px 16px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        .file-info { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; font-weight: 700; color: #334155; }
+        .file-actions { display: flex; align-items: center; gap: 8px; }
+        .btn-view { background: #2563eb; color: #ffffff; border: none; padding: 7px 16px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; }
+        .btn-view:hover { background-color: #1d4ed8; }
+        .btn-delete { background: #ef4444; color: #ffffff; border: none; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 700; }
+        .btn-delete:hover { background-color: #dc2626; }
+
+        .modal-footer { padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; }
+        .save-btn { background: #10b981; color: #ffffff; border: none; padding: 10px 24px; border-radius: 12px; font-weight: 800; cursor: pointer; display: none; }
+
+        footer { background: #0f172a; color: #f8fafc; padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; font-weight: 700; border-top: 3px solid #3b7b8a; flex-wrap: wrap; gap: 10px; }
+
+        @media (max-width: 900px) {
+            .modern-grid { grid-template-columns: 1fr; }
+            .split-tab { flex-direction: column-reverse; }
+            .left-section { clip-path: none; width: 100%; height: 260px; }
+            header { flex-direction: column; gap: 12px; text-align: center; }
+            nav { flex-direction: column; padding: 10px; gap: 10px; }
+            footer { flex-direction: column; text-align: center; gap: 8px; }
+            .card-actions-wrapper { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-right">
+            <img src="images/minastry-logo.png" alt="وزارة التربية والتعليم" class="logo-img">
+            <div class="header-title">
+                <h2>المديرية العامة للتعليم بمحافظة شمال الشرقية</h2>
+                <h1>مدرسة عثمان بن عفان للبنين</h1>
+            </div>
+        </div>
+        <div class="header-logos">
+            <img src="images/oman-2024.webp" alt="رؤية عمان 2040" class="logo-img">
+            <img src="images/school-logo.jpeg" alt="شعار المدرسة" class="logo-img">
+        </div>
+    </header>
+
+    <nav>
+        <ul class="nav-list">
+            <li><a id="link-home-tab" class="nav-link active" onclick="showTab('home-tab')">الرئيسية</a></li>
+            <li><a id="link-axis1-tab" class="nav-link" onclick="showTab('axis1-tab')">المحور الأول</a></li>
+            <li><a id="link-axis2-tab" class="nav-link" onclick="showTab('axis2-tab')">المحور الثاني</a></li>
+            <li><a id="link-axis3-tab" class="nav-link" onclick="showTab('axis3-tab')">المحور الثالث</a></li>
+        </ul>
+        <div>
+            <button id="admin-login-btn" class="admin-toggle-btn" onclick="toggleAdminMode()">🔐 دخول المدير</button>
+            <span id="admin-active-badge" class="admin-active-badge" onclick="toggleAdminMode()">🔓 وضع التحرير مفعل (اضغط للخروج)</span>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        
+        <!-- الرئيسية -->
+        <div id="home-tab" class="tab-content split-tab active">
+            <div class="right-section">
+                <div class="welcome-card">
+                    <div style="font-size: 2.4rem; margin-bottom: 8px;">💡</div>
+                    <h2>نرحب بكم في الصفحة الخاصة بنظام تقويم أداء مدرستنا</h2>
+                </div>
+
+                <div class="report-card">
+                    <div class="report-card-header">
+                        <span style="font-size: 1.6rem;">📋</span>
+                        <h3>التقرير المدرسي</h3>
+                    </div>
+                    <div id="report-file-container">
+                        <button class="btn-modern-action btn-file-action" style="margin:0 auto; padding:10px 20px;" onclick="openFileModal('school_report', 'التقرير المدرسي', 'evidence')">📁 عرض التقرير والتواثيق</button>
+                    </div>
+                </div>
+
+                <!-- بطاقة متابعة حساب منصة X -->
+                <div class="x-follow-card">
+                    <h3>لمتابعة آخر الأخبار والفعاليات المدرسية</h3>
+                    <p>يسعدنا تواصلكم ومتابعتكم لنا عبر حسابنا الرسمي في منصة X</p>
+                    <a href="https://x.com/EduGovNsq6503" target="_blank" class="x-follow-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        متابعة @EduGovNsq6503
+                    </a>
+                </div>
+
+            </div>
+            <div class="left-section">
+                <img src="images/school-building.jpeg" alt="صورة مدرسة عثمان بن عفان">
+            </div>
+        </div>
+
+        <!-- المحور الأول -->
+        <div id="axis1-tab" class="tab-content split-tab">
+            <div class="right-section">
+                <div class="axis-badge-yellow">جودة نواتج التعلم</div>
+                <div class="axis-buttons-group">
+                    <button class="axis-btn" onclick="showTab('academic-achievement-tab')">
+                        <span class="axis-btn-text">الإنجاز الدراسي</span>
+                        <span style="color:#3b7b8a; font-size:1.4rem;">◀</span>
+                    </button>
+                    <button class="axis-btn" onclick="showTab('personal-growth-tab')">
+                        <span class="axis-btn-text">النمو الشخصي</span>
+                        <span style="color:#3b7b8a; font-size:1.4rem;">◀</span>
+                    </button>
+                </div>
+            </div>
+            <div class="left-section">
+                <img src="images/school-building.jpeg" alt="المبنى المدرسي">
+            </div>
+        </div>
+
+        <!-- الإنجاز الدراسي -->
+        <div id="academic-achievement-tab" class="tab-content split-tab">
+            <div class="right-section">
+                <div class="axis-banner-hero">
+                    <span>📊</span>
+                    <span>الإنجاز الدراسي</span>
+                </div>
+                <div class="modern-grid">
+
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">📚</div>
+                                <span class="indicator-chip">3 مؤشرات</span>
+                            </div>
+                            <div class="card-title-text">التحصيل الدراسي</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('academic_1', 'التحصيل الدراسي')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('academic_1', 'التحصيل الدراسي', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('academic_1', 'التحصيل الدراسي', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge" style="background:#f0fdf4; color:#16a34a;">📈</div>
+                                <span class="indicator-chip">3 مؤشرات</span>
+                            </div>
+                            <div class="card-title-text">التقدم الدراسي</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('academic_2', 'التقدم الدراسي')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('academic_2', 'التقدم الدراسي', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('academic_2', 'التقدم الدراسي', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge" style="background:#fef3c7; color:#d97706;">🧠</div>
+                                <span class="indicator-chip">6 مؤشرات</span>
+                            </div>
+                            <div class="card-title-text">مهارات التعلم</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('academic_3', 'مهارات التعلم')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('academic_3', 'مهارات التعلم', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('academic_3', 'مهارات التعلم', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="left-section">
+                <img src="images/school-building.jpeg" alt="المبنى المدرسي">
+            </div>
+        </div>
+
+        <!-- النمو الشخصي -->
+        <div id="personal-growth-tab" class="tab-content split-tab">
+            <div class="right-section">
+                <div class="axis-banner-hero">
+                    <span>🌱</span>
+                    <span>النمو الشخصي</span>
+                </div>
+                <div class="modern-grid">
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">⭐</div>
+                                <span class="indicator-chip">3 مؤشرات</span>
+                            </div>
+                            <div class="card-title-text">القيم والسلوك</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('growth_1', 'القيم والسلوك')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('growth_1', 'القيم والسلوك', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('growth_1', 'القيم والسلوك', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge" style="background:#fff1f2; color:#e11d48;">🇴🇲</div>
+                                <span class="indicator-chip">4 مؤشرات</span>
+                            </div>
+                            <div class="card-title-text">الهوية والمواطنة</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('growth_2', 'الهوية والمواطنة')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('growth_2', 'الهوية والمواطنة', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('growth_2', 'الهوية والمواطنة', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge" style="background:#f0fdf4; color:#16a34a;">🌿</div>
+                                <span class="indicator-chip">2 مؤشرات</span>
+                            </div>
+                            <div class="card-title-text">الوعي الصحي والبيئي</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('growth_3', 'الوعي الصحي والبيئي')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('growth_3', 'الوعي الصحي والبيئي', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('growth_3', 'الوعي الصحي والبيئي', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge" style="background:#fef3c7; color:#d97706;">💡</div>
+                                <span class="indicator-chip">4 مؤشرات</span>
+                            </div>
+                            <div class="card-title-text">الابتكار وريادة الأعمال</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('growth_4', 'الابتكار وريادة الأعمال')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('growth_4', 'الابتكار وريادة الأعمال', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('growth_4', 'الابتكار وريادة الأعمال', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="left-section">
+                <img src="images/school-building.jpeg" alt="المبنى المدرسي">
+            </div>
+        </div>
+
+        <!-- المحور الثاني -->
+        <div id="axis2-tab" class="tab-content split-tab">
+            <div class="right-section">
+                <div class="axis-badge-yellow">جودة عمليات المدرسة</div>
+                <div class="axis-buttons-group">
+                    <button class="axis-btn" onclick="showTab('teaching-eval-tab')">
+                        <span class="axis-btn-text">التدريس والتقويم</span>
+                        <span style="color:#3b7b8a; font-size:1.4rem;">◀</span>
+                    </button>
+                    <button class="axis-btn" onclick="showTab('school-climate-tab')">
+                        <span class="axis-btn-text">مناخ المدرسة وبيئة التعلم</span>
+                        <span style="color:#3b7b8a; font-size:1.4rem;">◀</span>
+                    </button>
+                </div>
+            </div>
+            <div class="left-section">
+                <img src="images/school-building.jpeg" alt="المبنى المدرسي">
+            </div>
+        </div>
+
+        <!-- التدريس والتقويم -->
+        <div id="teaching-eval-tab" class="tab-content split-tab">
+            <div class="right-section">
+                <div class="axis-banner-hero">
+                    <span>👨‍🏫</span>
+                    <span>التدريس والتقويم</span>
+                </div>
+                <div class="modern-grid">
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">📋</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">تخطيط المنهاج الدراسي</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('teaching_1', 'تخطيط المنهاج الدراسي')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('teaching_1', 'تخطيط المنهاج الدراسي', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('teaching_1', 'تخطيط المنهاج الدراسي', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">🏫</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">إدارة الصف</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('teaching_2', 'إدارة الصف')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('teaching_2', 'إدارة الصف', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('teaching_2', 'إدارة الصف', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">🎯</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">فاعلية التدريس</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('teaching_3', 'فاعلية التدريس')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('teaching_3', 'فاعلية التدريس', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('teaching_3', 'فاعلية التدريس', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">📊</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">تقويم التعلم</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('teaching_4', 'تقويم التعلم')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('teaching_4', 'تقويم التعلم', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('teaching_4', 'تقويم التعلم', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="left-section">
+                <img src="images/school-building.jpeg" alt="المبنى المدرسي">
+            </div>
+        </div>
+
+        <!-- مناخ المدرسة وبيئة التعلم -->
+        <div id="school-climate-tab" class="tab-content split-tab">
+            <div class="right-section">
+                <div class="axis-banner-hero">
+                    <span>🏫</span>
+                    <span>مناخ المدرسة وبيئة التعلم</span>
+                </div>
+                <div class="modern-grid">
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">🛡️</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">البيئة المادية والسلامة</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('climate_1', 'البيئة المادية والسلامة')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('climate_1', 'البيئة المادية والسلامة', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('climate_1', 'البيئة المادية والسلامة', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">🤝</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">الرعاية والدعم للطلبة</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('climate_2', 'الرعاية والدعم للطلبة')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('climate_2', 'الرعاية والدعم للطلبة', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('climate_2', 'الرعاية والدعم للطلبة', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">🌐</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">العلاقات والشراكة المجتمعية</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('climate_3', 'العلاقات والشراكة المجتمعية')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('climate_3', 'العلاقات والشراكة المجتمعية', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('climate_3', 'العلاقات والشراكة المجتمعية', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="left-section">
+                <img src="images/school-building.jpeg" alt="المبنى المدرسي">
+            </div>
+        </div>
+
+        <!-- المحور الثالث -->
+        <div id="axis3-tab" class="tab-content split-tab">
+            <div class="right-section">
+                <div class="axis-badge-yellow">جودة قيادة المدرسة والموارد</div>
+                <div class="axis-buttons-group">
+                    <button class="axis-btn" onclick="showTab('leadership-tab')">
+                        <span class="axis-btn-text">القيادة والإدارة المدرسية</span>
+                        <span style="color:#3b7b8a; font-size:1.4rem;">◀</span>
+                    </button>
+                </div>
+            </div>
+            <div class="left-section">
+                <img src="images/school-building.jpeg" alt="المبنى المدرسي">
+            </div>
+        </div>
+
+        <!-- القيادة والإدارة المدرسية -->
+        <div id="leadership-tab" class="tab-content split-tab">
+            <div class="right-section">
+                <div class="axis-banner-hero">
+                    <span>👔</span>
+                    <span>القيادة والإدارة المدرسية</span>
+                </div>
+                <div class="modern-grid">
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">📌</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">التخطيط والتطوير التنظيمي</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('leadership_1', 'التخطيط والتطوير التنظيمي')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('leadership_1', 'التخطيط والتطوير التنظيمي', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('leadership_1', 'التخطيط والتطوير التنظيمي', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">🎓</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">التطوير المهني للكوادر المدرسية</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('leadership_2', 'التطوير المهني للكوادر المدرسية')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('leadership_2', 'التطوير المهني للكوادر المدرسية', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('leadership_2', 'التطوير المهني للكوادر المدرسية', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                    <div class="modern-card">
+                        <div>
+                            <div class="card-top-header">
+                                <div class="card-icon-badge">📊</div>
+                                <span class="indicator-chip">مؤشر 1</span>
+                            </div>
+                            <div class="card-title-text">متابعة الأداء وتقويمه</div>
+                        </div>
+                        <div class="card-actions-wrapper">
+                            <button class="btn-modern-action btn-text-action" onclick="openTextModal('leadership_3', 'متابعة الأداء وتقويمه')">📄 العبارات</button>
+                            <button class="btn-modern-action btn-file-action" onclick="openFileModal('leadership_3', 'متابعة الأداء وتقويمه', 'evidence')">📁 الأدلة</button>
+                            <button class="btn-modern-action btn-guide-action" onclick="openFileModal('leadership_3', 'متابعة الأداء وتقويمه', 'guide')">📘 الدليل الاسترشادي</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="left-section">
+                <img src="images/school-building.jpeg" alt="المبنى المدرسي">
+            </div>
+        </div>
+
+    </main>
+
+    <!-- النافذة المنبثقة العامة (Modal) -->
+    <div id="app-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-title">عنوان النافذة</h3>
+                <button class="modal-close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="modal-text-editor" class="modal-textarea" placeholder="أدخل العبارات والتفاصيل هنا..."></textarea>
+                
+                <div id="file-upload-box" class="file-upload-box" onclick="document.getElementById('file-input').click()">
+                    <span style="font-size:1.1rem; font-weight:700; color:#1e3a8a;">📁 اضغط هنا لرفع ملف جديد</span>
+                    <input type="file" id="file-input" style="display:none;" onchange="handleFileUpload(event)">
+                </div>
+
+                <div id="file-list" class="file-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-btn" class="save-btn" onclick="saveModalData()">حفظ التغيرات</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div>جميع الحقوق محفوظة © مدرسة عثمان بن عفان للبنين</div>
+        <div>نظام تقويم أداء المدارس - سلطنة عمان</div>
+    </footer>
+
+    <script>
+        let isAdmin = false;
+        let activeKey = '';
+        let activeMode = 'text';
+
+        function showTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+
+            if (tabId === 'home-tab') document.getElementById('link-home-tab')?.classList.add('active');
+            else if (tabId.includes('axis1') || tabId.includes('academic') || tabId.includes('growth')) document.getElementById('link-axis1-tab')?.classList.add('active');
+            else if (tabId.includes('axis2') || tabId.includes('teaching') || tabId.includes('climate')) document.getElementById('link-axis2-tab')?.classList.add('active');
+            else if (tabId.includes('axis3') || tabId.includes('leadership')) document.getElementById('link-axis3-tab')?.classList.add('active');
+        }
+
+        function toggleAdminMode() {
+            isAdmin = !isAdmin;
+            const loginBtn = document.getElementById('admin-login-btn');
+            const activeBadge = document.getElementById('admin-active-badge');
+
+            if (isAdmin) {
+                loginBtn.style.display = 'none';
+                activeBadge.style.display = 'inline-block';
+            } else {
+                loginBtn.style.display = 'inline-block';
+                activeBadge.style.display = 'none';
+            }
+        }
+
+        function openTextModal(key, title) {
+            activeKey = key;
+            activeMode = 'text';
+            document.getElementById('modal-title').innerText = 'عبارات: ' + title;
+            
+            const textarea = document.getElementById('modal-text-editor');
+            const uploadBox = document.getElementById('file-upload-box');
+            const fileList = document.getElementById('file-list');
+            const saveBtn = document.getElementById('save-btn');
+
+            textarea.style.display = 'block';
+            uploadBox.style.display = 'none';
+            fileList.style.display = 'none';
+
+            textarea.value = localStorage.getItem('text_' + key) || '';
+            textarea.readOnly = !isAdmin;
+
+            saveBtn.style.display = isAdmin ? 'block' : 'none';
+
+            document.getElementById('app-modal').style.display = 'flex';
+        }
+
+        function openFileModal(key, title, fileType) {
+            activeKey = key + '_' + fileType;
+            activeMode = 'file';
+            const label = fileType === 'guide' ? 'الدليل الاسترشادي' : 'الأدلة والتواثيق';
+            document.getElementById('modal-title').innerText = label + ': ' + title;
+
+            const textarea = document.getElementById('modal-text-editor');
+            const uploadBox = document.getElementById('file-upload-box');
+            const fileList = document.getElementById('file-list');
+            const saveBtn = document.getElementById('save-btn');
+
+            textarea.style.display = 'none';
+            saveBtn.style.display = 'none';
+            uploadBox.style.display = isAdmin ? 'block' : 'none';
+            fileList.style.display = 'flex';
+
+            renderFileList();
+            document.getElementById('app-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('app-modal').style.display = 'none';
+        }
+
+        function saveModalData() {
+            if (activeMode === 'text') {
+                const textarea = document.getElementById('modal-text-editor');
+                localStorage.setItem('text_' + activeKey, textarea.value);
+                alert('تم حفظ العبارات بنجاح');
+            }
+            closeModal();
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            let files = JSON.parse(localStorage.getItem('files_' + activeKey) || '[]');
+            files.push({ name: file.name, url: '#' });
+            localStorage.setItem('files_' + activeKey, JSON.stringify(files));
+
+            renderFileList();
+            event.target.value = '';
+        }
+
+        function renderFileList() {
+            const fileList = document.getElementById('file-list');
+            fileList.innerHTML = '';
+            let files = JSON.parse(localStorage.getItem('files_' + activeKey) || '[]');
+
+            if (files.length === 0) {
+                fileList.innerHTML = '<div style="text-align:center; color:#64748b; padding:15px; font-weight:700;">لا توجد ملفات مرفوعة حالياً</div>';
+                return;
+            }
+
+            files.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.innerHTML = `
+                    <div class="file-info">📄 <span>${file.name}</span></div>
+                    <div class="file-actions">
+                        <a href="${file.url}" class="btn-view" target="_blank">عرض</a>
+                        ${isAdmin ? `<button class="btn-delete" onclick="deleteFile(${index})">حذف</button>` : ''}
+                    </div>
+                `;
+                fileList.appendChild(item);
+            });
+        }
+
+        function deleteFile(index) {
+            let files = JSON.parse(localStorage.getItem('files_' + activeKey) || '[]');
+            files.splice(index, 1);
+            localStorage.setItem('files_' + activeKey, JSON.stringify(files));
+            renderFileList();
+        }
+    </script>
+</body>
+</html>
